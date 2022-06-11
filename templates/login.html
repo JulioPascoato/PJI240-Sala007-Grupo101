@@ -1,0 +1,25 @@
+{% extends "base.html" %} 
+
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %} Kolombolo - Login{% endblock %}
+
+{% block content %}
+
+
+<div class="container px-5">
+  <h3>Login - Área restrita</h3>
+  <h4>{% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+       <p>{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+</h4>
+  <div class="container p-5">
+  {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+  </div>
+</div>
+
+{% endblock %}

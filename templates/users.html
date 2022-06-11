@@ -1,0 +1,17 @@
+{% extends "base.html" %} 
+
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %} Kolombolo - Acervo Digital {% endblock %}
+
+{% block content %}
+
+<div class="container px-5">
+  <h3>Cadastro de Usuários</h3>
+
+  <div class="container p-5">
+  {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+  </div>
+</div>
+
+{% endblock %}
