@@ -1,0 +1,52 @@
+{% extends "base.html" %} 
+
+{% block title %} Área Administrativa - Protagonistas {% endblock %} 
+
+{% block content %}
+
+<div class="container px-5">
+    <h3>Protagonistas</h3>
+    
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/admin">Admin</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Protagonistas</li>
+      </ol>
+    </nav>
+
+    <div class="container pr-5">
+     
+        <a class="btn btn-primary float-right" href="{{url_for('protagonista')}}">Adicionar</a>
+        
+    </div>
+
+    <div class="container p-5">
+        <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nome</th>
+                <th  class="text-center" colspan="2" scope="col">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                {% for protagonista in protagonistas %}
+                    <tr>
+                        <th scope="row">{{ protagonista.id }}</th>
+                        <td>{{ protagonista.name }}</td>
+                        <td class="text-center"><a href="{{url_for('delete_protagonista', protagonista_id=protagonista.id) }}">✘</a></td>
+                        <td class="text-center"><a href="{{url_for('edit_protagonista', protagonista_id=protagonista.id)}}">🖊</a></td>
+                        
+                    </tr>
+                     
+                {% endfor %}
+            
+             
+            </tbody>
+          </table>
+    </div>
+  </div>
+ 
+{% endblock %}

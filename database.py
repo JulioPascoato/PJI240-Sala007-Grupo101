@@ -22,7 +22,36 @@ class User(UserMixin, Base):
     email=Column(String(80), unique=True, nullable=False)
     date_created=Column(DateTime(), default=datetime.utcnow)
 
+
     def __repr__(self):
         return f"<User fullname={self.fullname} email={self.email}>"
 
 
+class Midia(Base):
+    __tablename__='tipo'
+    id=Column(Integer(), primary_key=True, autoincrement=True)
+    name=Column(String(80), nullable=False, unique=True)
+    
+
+    def __repr__(self):
+        return f"<Midia name={self.name}>"
+
+
+class Protagonista(Base):
+    __tablename__='protagonista'
+    id=Column(Integer(), primary_key=True, autoincrement=True)
+    name=Column(String(80), nullable=False, unique=True)
+    
+
+    def __repr__(self):
+        return f"<Protagonista name={self.name}>"
+
+
+class Suporte(Base):
+    __tablename__='suporte'
+    id=Column(Integer(), primary_key=True, autoincrement=True)
+    name=Column(String(80), nullable=False, unique=True)
+    
+
+    def __repr__(self):
+        return f"<Suporte name={self.name}>"
