@@ -5,6 +5,19 @@
 {% block content %}
 
 <div class="container px-5">
+
+  {% for message in get_flashed_messages() %}
+    
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    {{ message}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+
+  {% endfor %}
+  
     <h3>Tipo de Mídia</h3>
 
     <nav aria-label="breadcrumb">
@@ -15,12 +28,10 @@
       </ol>
     </nav>
 
-    <div class="container pr-5">
-        <a class="btn btn-primary float-right" href="{{url_for('midia')}}">Adicionar</a>
-        
-    </div>
+    <div class="container p-5 shadow bg-white rounded">
 
-    <div class="container p-5">
+      <a class="btn btn-primary float-right mb-4" href="{{url_for('midia')}}">Adicionar</a>
+
         <table class="table table-striped">
             <thead>
               <tr>
@@ -35,8 +46,9 @@
                     <tr>
                         <th scope="row">{{ midia.id }}</th>
                         <td>{{ midia.name }}</td>
-                        <td class="text-center"><a href="{{url_for('delete_midia', midia_id=midia.id) }}">✘</a></td>
-                        <td class="text-center"><a href="{{url_for('edit_midia', midia_id=midia.id)}}">🖊</a></td>
+                        <td class="text-center"><a class="btn btn-outline-secondary" href="{{url_for('edit_midia', midia_id=midia.id)}}">Editar</a></td>
+                        <td class="text-center"><a class="btn btn-outline-danger" href="{{url_for('delete_midia', midia_id=midia.id) }}">Apagar</a></td>
+                        
                     </tr>
                      
                 {% endfor %}

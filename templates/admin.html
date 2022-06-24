@@ -6,10 +6,23 @@
 {% block content %}
     
 <div class="container px-5">
+
+  {% for message in get_flashed_messages() %}
+    
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    {{ message}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+
+  {% endfor %}
+
     <h3>Área Administrativa</h3>
    
-    <div class="container p-5">
-        <div class="container">
+    <div class="container p-5 mt-4 shadow bg-white rounded">
+        <div class="container ">
 
             <div class="row row-cols-1 row-cols-sm-1 row-cols-md-3">
 
@@ -18,7 +31,7 @@
                     <div class="card-header">Acervo</div>
                     <div class="card-body">
                       <h5 class="card-title">Gerenciamento Acervo</h5>
-                      <p class="card-text">Adicionar, gerenciar e remover acervo. <a href="#">Acessar</a></p>
+                      <p class="card-text">Adicionar, gerenciar e remover acervo. <a href="/acervo-admin">Acessar</a></p>
                     </div>
                 </div>
               </div>

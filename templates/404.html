@@ -1,0 +1,28 @@
+{% extends "base.html" %} 
+
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %} Kolombolo - 404{% endblock %}
+
+{% block content %}
+
+
+<div class="container px-5">
+  
+    <div class="container p-5">
+        <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2">
+
+            <div class="col mb-6">
+                <img src="{{url_for('static', filename='assets/image/logo_galo.png')}}" alt="logo" width="80%"/>
+            </div>
+        
+            <div class="col mb-6 my-auto text-center ">
+             <h1>Erro 404.</h1>
+             <h3>Ops! Não foi possível encontrar a página</h3>
+             <p>Continue navegando em nosso site. <a href="/"> Ir para Página Inicial</a></p> 
+            </div>
+        </div>       
+    </div>
+</div>
+
+{% endblock %}

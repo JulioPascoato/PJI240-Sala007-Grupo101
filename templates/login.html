@@ -8,15 +8,22 @@
 
 
 <div class="container px-5">
+  
+  {% for message in get_flashed_messages() %}
+    
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{ message}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+   
+
+  {% endfor %}
+
+
   <h3>Login - Área restrita</h3>
-  <h4>{% with messages = get_flashed_messages() %}
-    {% if messages %}
-      {% for message in messages %}
-       <p>{{ message }}</p>
-      {% endfor %}
-    {% endif %}
-  {% endwith %}
-</h4>
+
   <div class="container p-5">
   {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}
   </div>

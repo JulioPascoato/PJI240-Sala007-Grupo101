@@ -1,8 +1,7 @@
 {% extends "base.html" %} 
 
 {% import "bootstrap/wtf.html" as wtf %}
-
-{% block title %} Kolombolo - Usuários {% endblock %}
+{% block title %} Kolombolo - Acervo {% endblock %}
 
 {% block content %}
 
@@ -20,10 +19,18 @@
 
 {% endfor %}
 
-  <h3>Cadastro de Usuários</h3>
+{% if is_edit: %}
+  <h3>Editar Acervo</h3>
+{% else: %}
+  <h3>Cadastro de Acervo</h3>
+{% endif %}
 
   <div class="container p-5">
-  {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+  
+  <form method="post">
+    {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+
+  </form> 
   </div>
 </div>
 
