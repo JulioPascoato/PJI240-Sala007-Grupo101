@@ -1,9 +1,8 @@
 from sqlalchemy.orm import declarative_base, sessionmaker, relationship, backref
-from sqlalchemy import Column, ForeignKey, String, DateTime, Integer, create_engine
+from sqlalchemy import Column, ForeignKey, String, DateTime, Integer, create_engine, Table
 from datetime import datetime
 from flask_login import UserMixin
 import os
-
 
 
 BASE_DIR=os.path.dirname(os.path.realpath(__file__))
@@ -14,6 +13,14 @@ Base = declarative_base()
 engine=create_engine(connection_string, echo=True, connect_args={'check_same_thread': False})
 
 Session=sessionmaker()
+
+
+acervo_protagonista = Table(
+        'acervo_protagonista',
+        Base.metadata,
+        Column('acervo_id', Integer, ForeignKey('acervo.id')),
+        Column('protagonista_id', Integer, ForeignKey('protagonista.id')),
+)
 
 
 class User(UserMixin, Base):
@@ -46,7 +53,7 @@ class Protagonista(Base):
     __tablename__='protagonista'
     id=Column(Integer(), primary_key=True, autoincrement=True)
     name=Column(String(80), nullable=False, unique=True)
-    
+
 
     def __repr__(self):
         return f"<Protagonista name={self.name}>"
@@ -83,9 +90,13 @@ class Acervo(Base):
     suporte_id = Column(Integer, ForeignKey("suporte.id"))
     suporte = relationship("Suporte", backref=backref("suporte", uselist=False))
 
+    protagonistas = relationship('Protagonista', secondary=acervo_protagonista, backref='acervos'  )
+
 
     def __repr__(self):
         return f"<Acervo name={self.name} localidade={self.localidade}>"
 
-    
+
+
+
     

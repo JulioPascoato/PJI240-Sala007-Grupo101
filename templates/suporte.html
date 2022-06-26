@@ -27,9 +27,17 @@
       <h3>Cadastro Suporte</h3>
   {% endif %}
 
-<div class="container p-5">
-  {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+  <div class="container p-5">
+    <form class="form form-horizontal" method="post" role="form">
+      {{ form.hidden_tag() }}
+      {{ wtf.form_errors(form, hiddens="only") }}
+    
+      {{ wtf.form_field(form.name) }}
+      {{ wtf.form_field(form.submit, button_map={"submit": "primary"}) }}
+      <a href="/suporte-admin" class="btn btn-danger">Cancel</a>
+    </form>
   </div>
+
 </div>
 
 {% endblock %}

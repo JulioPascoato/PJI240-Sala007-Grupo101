@@ -1,31 +1,84 @@
-{% extends "base.html" %} {% block title %}Kolombolo - Acervo Digital{% endblock
-%} {% block content %}
+{% extends "base.html" %} 
+
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Kolombolo - Acervo Digital {% endblock%} 
+
+{% block content %}
 
 
-<div class="card" style="width: 18rem">
-  <img src="..." class="card-img-top" alt="..." />
-  <div class="card-body">
-    <p class="card-text">
-      Some quick example text to build on the card title and make up the bulk of
-      the card's content.
-    </p>
+<div class="container p-5">
+
+  {% for message in get_flashed_messages() %}
+    
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{ message}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+   
+
+  {% endfor %}
+
+  <h5 class="text-secondary">BUSCA NO ACERVO</h5>
+
+  <div class="container my-4 p-3 shadow bg-white rounded">
+
+    <div class="card-group">
+
+      <div class="card text-center align-middle">
+        <div class="card-body p-5">
+          <i class="fas fa-archive fa-5x"></i>
+        </div>
+           
+        <div class="card-footer"><h6><a class="text-secondary" href="">Acervo Kolombolo</a></h6></div>
+      </div>
+      
+      <div class="card text-center align-middle">
+        <div class="card-body p-5">
+          <i class="fas fa-book fa-5x"></i>
+        </div>
+           
+        <div class="card-footer"><h6><a class="text-secondary" href="">Livros</a></h6></div>
+      </div>
+
+
+      <div class="card text-center align-middle">
+        <div class="card-body p-5">
+          <i class="fas fa-photo-video fa-5x"></i>
+        </div>
+           
+        <div class="card-footer"><h6><a class="text-secondary" href="">Imagens</a></h6></div>
+      </div>
+    </div>
+
   </div>
-</div>
-<div class="card" style="width: 18rem">
-  <img src="..." class="card-img-top" alt="..." />
-  <div class="card-body">
-    <p class="card-text">
-      Some quick example text to build on the card title and make up the bulk of
-      the card's content.
-    </p>
+
+  <div class="container">
+
+    <div class="row">
+
+      <div class="col-sm-12 col-md-6">
+        <div class="container my-4 p-3 shadow bg-white rounded">
+          <h5 class="text-secondary">NAVEGUE NO ACERVO POR</h5>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <div class="container my-4 p-3">
+          <h5 class="text-secondary">ACESSO RESTRITO</h5>
+          <div class="container">
+            {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+          </div>
+          
+        </div>
+      </div>
+      
+    </div>
   </div>
+
+  
+
 </div>
-<div class="card" style="width: 18rem">
-  <div class="card-header">Featured</div>
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item">An item</li>
-    <li class="list-group-item">A second item</li>
-    <li class="list-group-item">A third item</li>
-  </ul>
-</div>
+
 {% endblock %}

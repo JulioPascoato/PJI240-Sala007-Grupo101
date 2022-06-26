@@ -3,10 +3,8 @@ from flask import Flask, render_template, abort, redirect, url_for, flash
 from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
 from functools import wraps
-
-from sqlalchemy import values
 from forms import UsersForm, LoginForm, MidiaForm, ProtagonistaForm, SuporteForm, AcervoForm
-from database import Midia, User, Protagonista, Suporte, Acervo, Base, engine, Session
+from database import Midia, User, Protagonista, Suporte, Acervo, Base, engine, Session, acervo_protagonista
 from flask_login import login_user, LoginManager, login_required, current_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -36,10 +34,34 @@ def admin_only(f):
     return decorated_function
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def home():
-    return render_template("index.html")
+    form = LoginForm()
 
+    if form.validate_on_submit():
+        email = form.email.data
+        password = form.password.data
+
+        user = local_session.query(User).filter_by(email=email).first()
+        
+        #print(user)
+        # Email doesn't exist or password incorrect.
+        if not user:
+            flash("Usuário não existe, Por gentileza tente novamente.")
+            return redirect(url_for('home'))
+        elif not check_password_hash(user.password, password):
+            flash('Senha incorreta, Por gentileza tente novamente.')
+            return redirect(url_for('home'))
+        else:
+            login_user(user)
+            flash(f"Bem-vindo a área administrativa, {user.fullname}")
+            return redirect(url_for('admin'))
+
+    return render_template("index.html", form=form)
+
+@app.route("/acessibilidade")
+def acessibilidade():
+    return render_template("acessibilidade.html")
 
 ###### Login Admin ####### 
 @app.route('/login', methods=["GET", "POST"])
@@ -61,6 +83,7 @@ def login():
             return redirect(url_for('login'))
         else:
             login_user(user)
+            flash(f"Bem-vindo a área administrativa, {user.fullname}")
             return redirect(url_for('admin'))
     return render_template("login.html", form=form, current_user=current_user)
 
@@ -358,6 +381,9 @@ def acervo():
     # Carrega as opçoes de suporte
     form.suporte.choices = [(suporte.id, suporte.name) for suporte in local_session.query(Suporte).all()]
 
+    # Carrega as opções dos protagonistas
+    form.protagonistas.choices = [(protagonista.id, protagonista.name) for protagonista in local_session.query(Protagonista).all()]
+
     if form.validate_on_submit():
         
         new_acervo = Acervo(
@@ -369,9 +395,14 @@ def acervo():
             origem=form.original.data,
             autor_id=current_user.id,
             tipo_id=form.midia.data,
-            suporte_id=form.suporte.data
-
+            suporte_id=form.suporte.data,
         )
+
+        for protagonista in form.protagonistas.data:
+            protagonista_obj = local_session.query(Protagonista).get(protagonista)
+            new_acervo.protagonistas.append(protagonista_obj)
+
+
         local_session.add(new_acervo)
 
         try:
@@ -396,9 +427,7 @@ def acervo_admin():
 def edit_acervo(acervo_id):
 
     acervo = local_session.query(Acervo).get(acervo_id)
-
-    data_str = acervo.data_created
-    data_final = datetime.strptime(data_str, "%Y-%m-%d")
+    
 
     edit_acervo = AcervoForm(
         evento=acervo.name,
@@ -406,20 +435,19 @@ def edit_acervo(acervo_id):
         cidade=acervo.cidade,
         estado=acervo.estado,
         original=acervo.origem,
-        data_created = data_final
+        data_created = datetime.strptime(acervo.data_created, "%Y-%m-%d"),
+        midia = acervo.tipo_id,
+        suporte = acervo.suporte_id
 
     )
-    
+   
     # Carrega as opçoes de midia
     edit_acervo.midia.choices = [(midia.id, midia.name) for midia in local_session.query(Midia).all()]
-
-    #Carrega data do evento no DateField
-    #data_str = acervo.data_created
-    #edit_acervo.data_created.data = datetime.strptime(data_str, "%Y-%m-%d")
-
+    
     # Carrega as opçoes de suporte
     edit_acervo.suporte.choices = [(suporte.id, suporte.name) for suporte in local_session.query(Suporte).all()]
 
+    edit_acervo.protagonistas.choices = [(protagonista.id, protagonista.name) for protagonista in local_session.query(Protagonista).all()]
      
 
     if edit_acervo.validate_on_submit():
@@ -429,7 +457,19 @@ def edit_acervo(acervo_id):
         acervo.estado = edit_acervo.estado.data
         acervo.tipo_id = edit_acervo.midia.data
         acervo.origem = edit_acervo.original.data
+        acervo.suporte_id = edit_acervo.suporte.data
         acervo.data_created = edit_acervo.data_created.data.strftime("%Y-%m-%d")
+
+        
+        for protagonista in local_session.query(Protagonista).all():
+            if protagonista in acervo.protagonistas:
+                acervo.protagonistas.remove(protagonista)
+        
+
+        for protagonista in edit_acervo.protagonistas.data:
+            protagonista_obj = local_session.query(Protagonista).get(protagonista)
+            acervo.protagonistas.append(protagonista_obj)
+
         
         try:
             local_session.commit()

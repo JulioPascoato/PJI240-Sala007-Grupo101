@@ -6,30 +6,37 @@
 
 {% block content %}
 
-<div class="container px-5">
+  <div class="container px-5">
 
-  {% for message in get_flashed_messages() %}
-    
-  <div class="alert alert-warning alert-dismissible fade show" role="alert">
-    {{ message}}
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
+    {% for message in get_flashed_messages() %}
+      
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      {{ message}}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+
+    {% endfor %}
+
+    {% if is_edit: %}
+        <h3>Editar Tipo de Mídia</h3>
+        {% else: %}
+        <h3>Cadastro Tipo de Mídia</h3>
+    {% endif %}
+
+
+    <div class="container p-5">
+      <form class="form form-horizontal" method="post" role="form">
+        {{ form.hidden_tag() }}
+        {{ wtf.form_errors(form, hiddens="only") }}
+      
+        {{ wtf.form_field(form.name) }}
+        {{ wtf.form_field(form.submit, button_map={"submit": "primary"}) }}
+        <a href="/midia-admin" class="btn btn-danger">Cancel</a>
+      </form>
+    </div>
   </div>
-
-
-  {% endfor %}
-
-  {% if is_edit: %}
-      <h3>Editar Tipo de Mídia</h3>
-      {% else: %}
-      <h3>Cadastro Tipo de Mídia</h3>
-  {% endif %}
-
-
-  <div class="container p-5">
-  {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}
-  </div>
-</div>
 
 {% endblock %}

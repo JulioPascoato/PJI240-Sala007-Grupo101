@@ -1,49 +1,55 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, EmailField, SelectField, DateField
-from wtforms.validators import DataRequired, URL, Email
-from flask_ckeditor import CKEditorField
+from wtforms import StringField, SubmitField, PasswordField, EmailField, SelectField, DateField, validators, SelectMultipleField
+from wtforms.validators import DataRequired, Email
+
+
+MENSAGEM_PADRAO = "Campo Obrigatório"
+
 
 #form login sistema
 class LoginForm(FlaskForm):
-    email = StringField("Email", validators=[DataRequired()])
-    password = PasswordField("Senha", validators=[DataRequired()])
+    email = StringField("Email", validators=[DataRequired(MENSAGEM_PADRAO)])
+    password = PasswordField("Senha", validators=[DataRequired(MENSAGEM_PADRAO)])
     submit = SubmitField("Acessar")
 
 
 #formulário cadastro usuario
 class UsersForm(FlaskForm):
-    fullname = StringField("Nome Completo", validators=[DataRequired()])
-    email= EmailField("Email", validators=[Email()])
-    password = PasswordField("Senha", validators=[DataRequired()])
+    fullname = StringField("Nome Completo", validators=[DataRequired(MENSAGEM_PADRAO)])
+    email= EmailField("Email", validators=[Email(MENSAGEM_PADRAO)])
+    password = PasswordField("Senha", [
+        validators.DataRequired(MENSAGEM_PADRAO),
+        validators.EqualTo('confirm', message='Senha deve repetir')])
+
+    confirm = PasswordField('Digite a senha novamente')
     submit = SubmitField("Cadastrar")
 
 #form cadastro Tipo midia
 class MidiaForm(FlaskForm):
-    name = StringField("Nome", validators=[DataRequired()])
+    name = StringField("Nome", validators=[DataRequired(MENSAGEM_PADRAO)])
     submit = SubmitField("Cadastrar")
 
 
 #form cadastro Protagonista
 class ProtagonistaForm(FlaskForm):
-    name = StringField("Nome", validators=[DataRequired()])
+    name = StringField("Nome", validators=[DataRequired(MENSAGEM_PADRAO)])
     submit = SubmitField("Cadastrar")
 
 
 #form cadastro Suporte
 class SuporteForm(FlaskForm):
-    name = StringField("Nome", validators=[DataRequired()])
+    name = StringField("Nome", validators=[DataRequired(MENSAGEM_PADRAO)])
     submit = SubmitField("Cadastrar")
 
 #form cadastro acervo
 class AcervoForm(FlaskForm):
-    evento = StringField("Nome do Evento", validators=[DataRequired()])
-    localidade = StringField("Localidade", validators=[DataRequired()])
-    cidade = StringField("Cidade", validators=[DataRequired()])
-    estado = StringField("Estado", validators=[DataRequired()])
+    evento = StringField("Nome do Evento", validators=[DataRequired(MENSAGEM_PADRAO)])
+    localidade = StringField("Localidade", validators=[DataRequired(MENSAGEM_PADRAO)])
+    cidade = StringField("Cidade", validators=[DataRequired(MENSAGEM_PADRAO)])
+    estado = StringField("Estado", validators=[DataRequired(MENSAGEM_PADRAO)])
     data_created = DateField("Data do evento", format="%Y-%m-%d")
-    midia = SelectField("Selecione uma midia", validate_choice=True, choices=[])
-    #protagonista = StringField("Protagonistas", validators=[DataRequired()])
-    original = StringField("Acervo Original", validators=[DataRequired()])
-    suporte = SelectField("Selecione um suporte", validate_choice=True, choices=[])
-
+    midia = SelectField("Selecione uma midia", validate_choice=True, choices=[], coerce=int)
+    protagonistas = SelectMultipleField("Protagonistas", validate_choice=True, choices=[], coerce=int)
+    original = StringField("Acervo Original", validators=[DataRequired(MENSAGEM_PADRAO)])
+    suporte = SelectField("Selecione um suporte", validate_choice=True, choices=[], coerce=int)
     submit = SubmitField("Cadastrar")
