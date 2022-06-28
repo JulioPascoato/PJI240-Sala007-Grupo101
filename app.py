@@ -535,6 +535,18 @@ def search_nav(search_id):
         query = local_session.query(Acervo).order_by(Acervo.data_created).all()
     elif search_id == 4:
         query = local_session.query(Acervo).order_by(Acervo.localidade).all()
+    
+    
+    if search_form.validate_on_submit():
+
+        if search_form.order_by.data == 1:  
+            query = local_session.query(Acervo).filter(Acervo.name.like(f'%{search_form.search.data}%')).all()
+        elif search_form.order_by.data == 2:  
+            query = local_session.query(Acervo).filter(Acervo.name.like(f'%{search_form.search.data}%')).order_by(Acervo.data_created).all()
+        elif search_form.order_by.data == 3:  
+            query = local_session.query(Acervo).filter(Acervo.name.like(f'%{search_form.search.data}%')).order_by(Acervo.localidade).all()
+        
+        return render_template("search.html", form=search_form, search=query, type=search_form.order_by.data)
 
     return render_template("search.html", form=search_form, search=query)  
 
