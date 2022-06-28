@@ -1,0 +1,87 @@
+{% extends "base.html" %} 
+
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %} Kolombolo - Busca{% endblock %}
+
+{% block content %}
+
+<div class="container px-5">
+  
+{% for message in get_flashed_messages() %}
+    
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    {{ message}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+
+  {% endfor %}
+
+
+  {% if type == 2: %}
+      <h3 class="text-secondary">Acervo Geral - Filtro por data</h3>
+      {% elif type == 3: %}
+      <h3 class="text-secondary">Acervo Geral - Filtro por localidade</h3>
+      {% else: %}
+      <h3 class="text-secondary">Acervo Geral</h3>
+  {% endif %}
+
+  <div class="container p-5">
+
+    <div class="container p-5 mb-5 shadow bg-white rounded">
+
+        <form class="form form-horizontal" method="post" role="form">
+            {{ form.hidden_tag() }}
+            {{ wtf.form_errors(form, hiddens="only") }}
+          
+            {{ wtf.form_field(form.search) }}
+            {{ wtf.form_field(form.order_by) }}
+            {{ wtf.form_field(form.asc_desc) }}
+
+            {{ wtf.form_field(form.submit, button_map={"submit": "primary"}) }}
+            
+          </form>
+
+    </div>
+     
+    
+
+    <div class="container p-1 rounded">
+
+        
+
+        <table class="table table-striped">
+              <thead class="thead-dark">
+                <tr class="text-center">
+                  <th scope="col" class="text-wrap" style="width: 15rem;">Evento</th>
+                  <th scope="col">Data</th>
+                  <th scope="col">Localidade</th>
+                  <th scope="col" class="text-wrap" style="width: 20rem;">Protagonistas</th>
+                </tr>
+              </thead>
+              <tbody>
+                
+                  {% for evento in search %}
+                      <tr class="text-left">
+                          <td>{{ evento.name }}</th>
+                          <td>{{ evento.data_created }}</td>
+                          <td>{{ evento.localidade }}</td>
+                          <td>{% for protagonista in evento.protagonistas %}{{ protagonista.name}}, {% endfor %}</td>
+                                                    
+                        </tr>
+                       
+                  {% endfor %}
+              
+               
+              </tbody>
+            </table>
+  
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

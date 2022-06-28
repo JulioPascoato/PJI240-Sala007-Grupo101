@@ -3,8 +3,10 @@ from flask import Flask, render_template, abort, redirect, url_for, flash
 from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
 from functools import wraps
-from forms import UsersForm, LoginForm, MidiaForm, ProtagonistaForm, SuporteForm, AcervoForm
-from database import Midia, User, Protagonista, Suporte, Acervo, Base, engine, Session, acervo_protagonista
+
+from sqlalchemy import desc
+from forms import UsersForm, LoginForm, MidiaForm, ProtagonistaForm, SuporteForm, AcervoForm, SearchForm
+from database import Midia, User, Protagonista, Suporte, Acervo, Base, engine, Session
 from flask_login import login_user, LoginManager, login_required, current_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -494,6 +496,48 @@ def delete_acervo(acervo_id):
         flash("Impossivel deletar. Tente Novamente!")
 
     return redirect(url_for('acervo_admin'))
+
+
+@app.route("/search", methods=["GET", "POST"])
+def search():
+
+    search_form = SearchForm()
+    search_form.order_by.choices=[(1,"Evento"), (2, "Data do Evento"), (3, "Localidade")]
+    search_form.asc_desc.choices=[(1,"Ascendente"), (2, "Descendente")]
+
+    query = local_session.query(Acervo).all()
+       
+
+
+    if search_form.validate_on_submit():
+
+        if search_form.order_by.data == 1:  
+            query = local_session.query(Acervo).filter(Acervo.name.like(f'%{search_form.search.data}%')).all()
+        elif search_form.order_by.data == 2:  
+            query = local_session.query(Acervo).filter(Acervo.name.like(f'%{search_form.search.data}%')).order_by(Acervo.data_created).all()
+        elif search_form.order_by.data == 3:  
+            query = local_session.query(Acervo).filter(Acervo.name.like(f'%{search_form.search.data}%')).order_by(Acervo.localidade).all()
+        
+        return render_template("search.html", form=search_form, search=query, type=search_form.order_by.data)  
+
+    return render_template("search.html", form=search_form, search=query)   
+
+@app.route("/search/<int:search_id>", methods=["GET", "POST"])
+def search_nav(search_id):
+
+    search_form = SearchForm()
+    search_form.order_by.choices=[(1,"Evento"), (2, "Data do Evento"), (3, "Localidade")]
+    search_form.asc_desc.choices=[(1,"Ascendente"), (2, "Descendente")]
+
+    if search_id == 1:
+        query = local_session.query(Acervo).order_by(Acervo.name).all()
+    elif search_id == 2:
+        query = local_session.query(Acervo).order_by(Acervo.data_created).all()
+    elif search_id == 4:
+        query = local_session.query(Acervo).order_by(Acervo.localidade).all()
+
+    return render_template("search.html", form=search_form, search=query)  
+
 
 # Invalid URL
 @app.errorhandler(404)

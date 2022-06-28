@@ -53,3 +53,10 @@ class AcervoForm(FlaskForm):
     original = StringField("Acervo Original", validators=[DataRequired(MENSAGEM_PADRAO)])
     suporte = SelectField("Selecione um suporte", validate_choice=True, choices=[], coerce=int)
     submit = SubmitField("Cadastrar")
+
+#form busca
+class SearchForm(FlaskForm):
+    search = StringField("Busca no acervo", validators=[DataRequired(MENSAGEM_PADRAO)])
+    order_by = SelectField("Ordenar por: ", validate_choice=True, choices=[], coerce=int)
+    asc_desc = SelectField("Na Ordem", validate_choice=True, choices=[], coerce=int)
+    submit = SubmitField("Buscar")
