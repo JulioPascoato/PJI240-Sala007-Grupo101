@@ -57,6 +57,6 @@ class AcervoForm(FlaskForm):
 #form busca
 class SearchForm(FlaskForm):
     search = StringField("Busca no acervo", validators=[DataRequired(MENSAGEM_PADRAO)])
-    order_by = SelectField("Ordenar por: ", validate_choice=True, choices=[], coerce=int)
-    asc_desc = SelectField("Na Ordem", validate_choice=True, choices=[], coerce=int)
+    order_by = SelectField("Buscar por: ", validate_choice=True, choices=[(1,"Evento"), (2, "Data do Evento"), (3, "Localidade"), (4, "Protagonistas")], coerce=int)
+    asc_desc = SelectField("Na Ordem", validate_choice=True, choices=[(1,"Ascendente"), (2, "Descendente")], coerce=int)
     submit = SubmitField("Buscar")

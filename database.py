@@ -81,6 +81,7 @@ class Acervo(Base):
 
     # Foreign key to link Users (refers o primary key of the user)
     autor_id = Column(Integer, ForeignKey('autor.id'))
+    
 
     # Foreign key to link tipo de Midia
     tipo_id = Column(Integer, ForeignKey("tipo.id"))

@@ -1,0 +1,111 @@
+{% extends "base.html" %} 
+
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %} Kolombolo - Busca{% endblock %}
+
+{% block content %}
+
+
+<div class="container px-5">
+  
+{% for message in get_flashed_messages() %}
+    
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    {{ message}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+
+{% endfor %}
+
+
+  <div class="container p-5">
+
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="javascript: history.go(-1)">Voltar</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ search.name }}</li>
+      </ol>
+    </nav>
+
+    <div class="container p-4 shadow p-1 rounded">
+
+      <table class="table table-striped table-bordered">
+        <tbody>
+          <tr>
+            <th scope="row">Nome do Evento:</th>
+            <td>{{ search.name }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Protagonistas:</th>
+            <td>{% for protagonista in search.protagonistas %}{{ protagonista.name}}<br>  {% endfor %}</td>
+          </tr>
+
+          <tr>
+            <th scope="row">Localidade:</th>
+            <td>{{ search.localidade }}</td>
+          </tr>
+
+          <tr>
+            <th scope="row">Cidade:</th>
+            <td> {{ search.cidade }}</td>
+          </tr>
+
+          <tr>
+            <th scope="row">Estado:</th>
+            <td> {{ search.estado }}</td>
+          </tr>
+
+          <tr>
+            <th scope="row">Data do evento:</th>
+            <td> {{ search.data_created[8:]+"-"+search.data_created[5:7] +"-"+ search.data_created[0:4] }}</td>
+          </tr>
+
+          <tr>
+            <th scope="row">Acervo de origem:</th>
+            <td> {{ search.origem }}</td>
+          </tr>
+
+          <tr>
+            <th scope="row">Tipo de mídia:</th>
+            <td> {{ search.tipo.name }}</td>
+          </tr>
+
+          <tr>
+            <th scope="row">Tipo de suporte:</th>
+            <td> {{ search.suporte.name }}</td>
+          </tr>
+
+          
+          <tr>
+            <th scope="row">Publicador:</th>
+            <td> {{ search.autor.fullname}}</td>
+          </tr>
+
+
+
+
+          
+        </tbody>
+      </table>
+
+       
+       
+      
+       
+       
+       
+      
+       
+
+       
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

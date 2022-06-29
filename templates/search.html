@@ -6,6 +6,7 @@
 
 {% block content %}
 
+
 <div class="container px-5">
   
 {% for message in get_flashed_messages() %}
@@ -57,8 +58,9 @@
               <thead class="thead-dark">
                 <tr class="text-center">
                   <th scope="col" class="text-wrap" style="width: 15rem;">Evento</th>
-                  <th scope="col">Data</th>
-                  <th scope="col">Localidade</th>
+                  <th scope="col">Mídia</th>
+                  <th scope="col" class="text-wrap" style="width: 15rem;">Data</th>
+                  <th scope="col" class="text-wrap" style="width: 15rem;">Localidade</th>
                   <th scope="col" class="text-wrap" style="width: 20rem;">Protagonistas</th>
                 </tr>
               </thead>
@@ -66,8 +68,9 @@
                 
                   {% for evento in search %}
                       <tr class="text-left">
-                          <td>{{ evento.name }}</th>
-                          <td>{{ evento.data_created }}</td>
+                          <td><a class="text-secondary" href="{{url_for('view_item', item_id=evento.id)}}">{{ evento.name }}</a></th>
+                          <td>{{ evento.tipo.name}}</td>  
+                          <td>{{ evento.data_created[8:]+"-"+evento.data_created[5:7] +"-"+ evento.data_created[0:4] }}</td>
                           <td>{{ evento.localidade }}</td>
                           <td>{% for protagonista in evento.protagonistas %}{{ protagonista.name}}, {% endfor %}</td>
                                                     

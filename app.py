@@ -3,13 +3,11 @@ from flask import Flask, render_template, abort, redirect, url_for, flash
 from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
 from functools import wraps
-
-from sqlalchemy import desc
 from forms import UsersForm, LoginForm, MidiaForm, ProtagonistaForm, SuporteForm, AcervoForm, SearchForm
 from database import Midia, User, Protagonista, Suporte, Acervo, Base, engine, Session
 from flask_login import login_user, LoginManager, login_required, current_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from sqlalchemy.orm import joinedload
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
@@ -502,53 +500,65 @@ def delete_acervo(acervo_id):
 def search():
 
     search_form = SearchForm()
-    search_form.order_by.choices=[(1,"Evento"), (2, "Data do Evento"), (3, "Localidade")]
-    search_form.asc_desc.choices=[(1,"Ascendente"), (2, "Descendente")]
-
+   
     query = local_session.query(Acervo).all()
        
-
-
     if search_form.validate_on_submit():
 
         if search_form.order_by.data == 1:  
             query = local_session.query(Acervo).filter(Acervo.name.like(f'%{search_form.search.data}%')).all()
         elif search_form.order_by.data == 2:  
-            query = local_session.query(Acervo).filter(Acervo.name.like(f'%{search_form.search.data}%')).order_by(Acervo.data_created).all()
+            query = local_session.query(Acervo).filter(Acervo.data_created.like(f'%{search_form.search.data}%')).order_by(Acervo.data_created).all()
         elif search_form.order_by.data == 3:  
-            query = local_session.query(Acervo).filter(Acervo.name.like(f'%{search_form.search.data}%')).order_by(Acervo.localidade).all()
+            query = local_session.query(Acervo).filter(Acervo.localidade.like(f'%{search_form.search.data}%')).order_by(Acervo.localidade).all()
+        elif search_form.order_by.data == 4:  
+            query = local_session.query(Acervo).filter(Acervo.protagonistas.any(Protagonista.name.like(f'%{search_form.search.data}%'))).all()      
         
         return render_template("search.html", form=search_form, search=query, type=search_form.order_by.data)  
 
     return render_template("search.html", form=search_form, search=query)   
 
+
 @app.route("/search/<int:search_id>", methods=["GET", "POST"])
 def search_nav(search_id):
 
     search_form = SearchForm()
-    search_form.order_by.choices=[(1,"Evento"), (2, "Data do Evento"), (3, "Localidade")]
-    search_form.asc_desc.choices=[(1,"Ascendente"), (2, "Descendente")]
-
+   
     if search_id == 1:
         query = local_session.query(Acervo).order_by(Acervo.name).all()
     elif search_id == 2:
         query = local_session.query(Acervo).order_by(Acervo.data_created).all()
+    elif search_id == 3:
+        query = local_session.query(Acervo).filter(Acervo.protagonistas.any(Protagonista.name.like("%Anto%"))).all()
     elif search_id == 4:
         query = local_session.query(Acervo).order_by(Acervo.localidade).all()
-    
-    
+    elif search_id == 5:
+        query = local_session.query(Acervo).filter(Acervo.tipo.has(Midia.name=="Livro")).all()
+    elif search_id == 6:
+        query = local_session.query(Acervo).filter(Acervo.tipo.has(Midia.name.like("%Li%"))).all()
+
+
     if search_form.validate_on_submit():
 
         if search_form.order_by.data == 1:  
             query = local_session.query(Acervo).filter(Acervo.name.like(f'%{search_form.search.data}%')).all()
         elif search_form.order_by.data == 2:  
-            query = local_session.query(Acervo).filter(Acervo.name.like(f'%{search_form.search.data}%')).order_by(Acervo.data_created).all()
+            query = local_session.query(Acervo).filter(Acervo.data_created.like(f'%{search_form.search.data}%')).order_by(Acervo.data_created).all()
         elif search_form.order_by.data == 3:  
-            query = local_session.query(Acervo).filter(Acervo.name.like(f'%{search_form.search.data}%')).order_by(Acervo.localidade).all()
+            query = local_session.query(Acervo).filter(Acervo.localidade.like(f'%{search_form.search.data}%')).order_by(Acervo.localidade).all()
+        elif search_form.order_by.data == 4:  
+            query = local_session.query(Acervo).filter(Acervo.protagonistas.any(Protagonista.name.like(f'%{search_form.search.data}%'))).all()  
         
         return render_template("search.html", form=search_form, search=query, type=search_form.order_by.data)
 
     return render_template("search.html", form=search_form, search=query)  
+
+
+@app.route("/view-item/<int:item_id>", methods=["GET", "POST"])
+def view_item(item_id):
+    query = local_session.query(Acervo).filter(Acervo.id == item_id).first()
+
+    return render_template("view_item.html", search=query)  
 
 
 # Invalid URL
