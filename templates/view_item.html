@@ -76,6 +76,15 @@
           </tr>
 
           <tr>
+            <th scope="row">Endereço da mídia:</th>
+            <td> {% if not search.link %}
+                       -
+                    {% else %}
+                       <a class="text-secondary" href="{{search.link}}" target="_blank">{{ search.link }}</a>
+                  {% endif %}</td>
+          </tr>
+
+          <tr>
             <th scope="row">Tipo de suporte:</th>
             <td> {{ search.suporte.name }}</td>
           </tr>

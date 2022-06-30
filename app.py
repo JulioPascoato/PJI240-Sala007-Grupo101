@@ -1,4 +1,5 @@
 from datetime import datetime
+from os import link
 from flask import Flask, render_template, abort, redirect, url_for, flash
 from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
@@ -396,6 +397,7 @@ def acervo():
             autor_id=current_user.id,
             tipo_id=form.midia.data,
             suporte_id=form.suporte.data,
+            link=form.link.data
         )
 
         for protagonista in form.protagonistas.data:
@@ -437,7 +439,8 @@ def edit_acervo(acervo_id):
         original=acervo.origem,
         data_created = datetime.strptime(acervo.data_created, "%Y-%m-%d"),
         midia = acervo.tipo_id,
-        suporte = acervo.suporte_id
+        suporte = acervo.suporte_id,
+        link=acervo.link
 
     )
    
@@ -459,6 +462,7 @@ def edit_acervo(acervo_id):
         acervo.origem = edit_acervo.original.data
         acervo.suporte_id = edit_acervo.suporte.data
         acervo.data_created = edit_acervo.data_created.data.strftime("%Y-%m-%d")
+        acervo.link = edit_acervo.link.data
 
         
         for protagonista in local_session.query(Protagonista).all():

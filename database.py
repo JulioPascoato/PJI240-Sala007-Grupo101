@@ -78,6 +78,7 @@ class Acervo(Base):
     estado=Column(String(80), nullable=False)
     data_created=Column(String(40), nullable=False)
     origem=Column(String(80), nullable=False)
+    link=Column(String(80), nullable=False)
 
     # Foreign key to link Users (refers o primary key of the user)
     autor_id = Column(Integer, ForeignKey('autor.id'))
