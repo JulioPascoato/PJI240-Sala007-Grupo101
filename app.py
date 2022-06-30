@@ -509,6 +509,7 @@ def search():
             query = local_session.query(Acervo).filter(Acervo.name.like(f'%{search_form.search.data}%')).all()
         elif search_form.order_by.data == 2:  
             query = local_session.query(Acervo).filter(Acervo.data_created.like(f'%{search_form.search.data}%')).order_by(Acervo.data_created).all()
+            search_form
         elif search_form.order_by.data == 3:  
             query = local_session.query(Acervo).filter(Acervo.localidade.like(f'%{search_form.search.data}%')).order_by(Acervo.localidade).all()
         elif search_form.order_by.data == 4:  
@@ -523,20 +524,28 @@ def search():
 def search_nav(search_id):
 
     search_form = SearchForm()
-   
+     
     if search_id == 1:
         query = local_session.query(Acervo).order_by(Acervo.name).all()
+
     elif search_id == 2:
         query = local_session.query(Acervo).order_by(Acervo.data_created).all()
+        search_form.order_by.data=2
+
     elif search_id == 3:
-        query = local_session.query(Acervo).filter(Acervo.protagonistas.any(Protagonista.name.like("%Anto%"))).all()
-    elif search_id == 4:
         query = local_session.query(Acervo).order_by(Acervo.localidade).all()
+        search_form.order_by.data=3
+
+    elif search_id == 4:
+        query = local_session.query(Acervo).filter(Acervo.protagonistas.any(Protagonista.id)).all()
+        search_form.order_by.data=4
+
     elif search_id == 5:
         query = local_session.query(Acervo).filter(Acervo.tipo.has(Midia.name=="Livro")).all()
     elif search_id == 6:
-        query = local_session.query(Acervo).filter(Acervo.tipo.has(Midia.name.like("%Li%"))).all()
+        query = local_session.query(Acervo).filter(Acervo.tipo.has(Midia.id==Acervo.tipo_id)).all()
 
+    
 
     if search_form.validate_on_submit():
 

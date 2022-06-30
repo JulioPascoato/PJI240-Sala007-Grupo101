@@ -60,3 +60,4 @@ class SearchForm(FlaskForm):
     order_by = SelectField("Buscar por: ", validate_choice=True, choices=[(1,"Evento"), (2, "Data do Evento"), (3, "Localidade"), (4, "Protagonistas")], coerce=int)
     asc_desc = SelectField("Na Ordem", validate_choice=True, choices=[(1,"Ascendente"), (2, "Descendente")], coerce=int)
     submit = SubmitField("Buscar")
+
